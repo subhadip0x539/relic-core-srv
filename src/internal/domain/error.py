@@ -1,0 +1,20 @@
+from fastapi import status
+
+
+class Error(Exception):
+    code = status.HTTP_500_INTERNAL_SERVER_ERROR
+    message = "Internal Server Error"
+
+    def __init__(self, message: str | None = None):
+        self.message = message or self.message
+        super().__init__(self.message)
+
+
+class InvalidTokenError(Error):
+    code = status.HTTP_401_UNAUTHORIZED
+    message = "Invalid token"
+
+
+class ForbiddenError(Error):
+    code = status.HTTP_403_FORBIDDEN
+    message = "You do not have permission to perform this action"

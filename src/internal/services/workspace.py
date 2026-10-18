@@ -1,6 +1,5 @@
 from internal.port.workspace import WorkspaceService, WorkspaceRepository
 from internal.domain.workspace import Workspace
-from internal.dto.workspace import PostWorkspaceRequest
 from uuid import uuid4
 
 
@@ -11,10 +10,10 @@ class WorkspaceServiceImpl(WorkspaceService):
     def all(self) -> list[Workspace]:
         return self.repo.all()
 
-    def create(self, request: PostWorkspaceRequest) -> Workspace:
+    def create(self, name: str) -> Workspace:
         payload = Workspace(
             id=str(uuid4()),
-            name=request.name,
+            name=name,
         )
 
         return self.repo.create(payload)

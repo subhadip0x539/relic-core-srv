@@ -1,6 +1,5 @@
 from abc import ABC, abstractmethod
 from internal.domain.workspace import Workspace
-from internal.dto.workspace import PostWorkspaceRequest
 
 
 class WorkspaceRepository(ABC):
@@ -19,5 +18,5 @@ class WorkspaceService(ABC):
         pass
 
     @abstractmethod
-    def create(self, request: PostWorkspaceRequest) -> Workspace:
+    def create(self, name: str) -> Workspace:
         pass
