@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from internal.domain.environment import Environment
-from internal.dto.environment import GetEnvironmentsRequestBody, PostEnvironmentRequest
+from internal.dto.environment import GetEnvironmentsRequestBody
 from internal.lib.fc import FC
 
 
@@ -20,5 +20,5 @@ class EnvironmentService(ABC):
         pass
 
     @abstractmethod
-    def create(self, request: PostEnvironmentRequest) -> Environment:
+    def create(self, name: str, color: str, workspace_id: str) -> Environment:
         pass

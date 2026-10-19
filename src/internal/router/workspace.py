@@ -5,7 +5,7 @@ from internal.dto.workspace import (
     PostWorkspaceResponse,
 )
 from internal.deps.workspace import WorkspaceHandler, get_workspace_handler
-from internal.deps.auth import Claims, get_claims
+from internal.deps.common import Claims, get_claims
 
 router = APIRouter(
     prefix="/workspaces",
@@ -14,10 +14,10 @@ router = APIRouter(
 
 @router.get("", response_model=GetWorkspacesResponse, response_model_exclude_none=True)
 def all(
-    _: Claims = Depends(get_claims),
+    claims: Claims = Depends(get_claims),
     hdl: WorkspaceHandler = Depends(get_workspace_handler),
 ):
-    return hdl.all()
+    return hdl.all(claims)
 
 
 @router.post(

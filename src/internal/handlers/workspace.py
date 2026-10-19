@@ -5,9 +5,9 @@ from internal.dto.workspace import (
     PostWorkspaceResponse,
     PostWorkspaceRequestBody,
 )
-from internal.deps.auth import Claims
-from internal.domain.auth import Role
 from fastapi import HTTPException
+from internal.lib.claims import Claims
+from internal.domain.auth import Permission
 from internal.domain.error import ForbiddenError
 
 
@@ -17,7 +17,12 @@ class WorkspaceHandler:
     def __init__(self, svc: WorkspaceService):
         self.svc = svc
 
-    def all(self) -> GetWorkspacesResponse:
+    def all(self, claims: Claims) -> GetWorkspacesResponse:
+        try:
+            claims.can(Permission.WORKSPACE_READ)
+        except ForbiddenError as exc:
+            raise HTTPException(exc.code, exc.message)
+
         result = self.svc.all()
 
         response = GetWorkspacesResponse(
@@ -33,7 +38,7 @@ class WorkspaceHandler:
         self, body: PostWorkspaceRequestBody, claims: Claims
     ) -> PostWorkspaceResponse:
         try:
-            claims.has(Role.EDITOR)
+            claims.can(Permission.WORKSPACE_CREATE)
         except ForbiddenError as exc:
             raise HTTPException(exc.code, exc.message)
 

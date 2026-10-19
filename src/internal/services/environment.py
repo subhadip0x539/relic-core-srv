@@ -1,6 +1,6 @@
 from internal.port.environment import EnvironmentService, EnvironmentRepository
 from internal.domain.environment import Environment
-from internal.dto.environment import GetEnvironmentsRequestBody, PostEnvironmentRequest
+from internal.dto.environment import GetEnvironmentsRequestBody
 from uuid import uuid4
 from internal.domain.common import Filter, FilterOperator
 from internal.lib.fc import FC
@@ -20,12 +20,12 @@ class EnvironmentServiceImpl(EnvironmentService):
 
         return self.repo.all(fc)
 
-    def create(self, request: PostEnvironmentRequest) -> Environment:
+    def create(self, name: str, color: str, workspace_id: str) -> Environment:
         payload = Environment(
             id=str(uuid4()),
-            name=request.name,
-            workspace_id=request.workspace_id,
-            color=request.color,
+            name=name,
+            workspace_id=workspace_id,
+            color=color,
         )
 
         return self.repo.create(payload)

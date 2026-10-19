@@ -17,19 +17,14 @@ class EnvironmentRepositoryImpl(EnvironmentRepository):
         environments: list[Environment] = []
 
         for doc in docs:
-            data = dict(doc)
-
-            id = data.get("_id")
-
-            if id is None:
-                continue
-
-            name = data.get("name", "")
-            color = data.get("color", "")
-            workspace_id = data.get("workspace_id", "")
 
             environments.append(
-                Environment(id=id, name=name, color=color, workspace_id=workspace_id)
+                Environment(
+                    id=doc["_id"],
+                    name=doc["name"],
+                    color=doc["color"],
+                    workspace_id=doc["workspace_id"],
+                )
             )
 
         return environments

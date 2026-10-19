@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends
 from internal.dto.feature import GetFeaturesResponse
 from internal.deps.feature import FeatureHandler, get_feature_handler
-from internal.deps.auth import get_api_key
+from internal.deps.common import get_api_key
 
 router = APIRouter(prefix="/features")
 

@@ -3,7 +3,7 @@ import json
 from fastapi import APIRouter, Depends, Request
 from fastapi.responses import StreamingResponse
 from internal.deps.common import EventManager, get_event_manager
-from internal.deps.auth import get_api_key
+from internal.deps.common import get_api_key
 
 router = APIRouter(prefix="/stream")
 

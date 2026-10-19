@@ -20,7 +20,7 @@ GetEnvironmentsResponseResponseBody = list[GetEnvironmentsResponseResponseBodyIt
 GetEnvironmentsResponse = Response[GetEnvironmentsResponseResponseBody]
 
 
-class PostEnvironmentRequest(BaseModel):
+class PostEnvironmentRequestBody(BaseModel):
     name: str
     color: str
     workspace_id: str

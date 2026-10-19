@@ -2,10 +2,11 @@ from fastapi import APIRouter, Depends, status
 from internal.dto.environment import (
     GetEnvironmentsRequestBody,
     GetEnvironmentsResponse,
-    PostEnvironmentRequest,
+    PostEnvironmentRequestBody,
     PostEnvironmentResponse,
 )
 from internal.deps.environment import EnvironmentHandler, get_environment_handler
+from internal.deps.common import Claims, get_claims
 
 router = APIRouter(prefix="/environments")
 
@@ -15,9 +16,10 @@ router = APIRouter(prefix="/environments")
 )
 def all(
     body: GetEnvironmentsRequestBody,
+    claims: Claims = Depends(get_claims),
     hdl: EnvironmentHandler = Depends(get_environment_handler),
 ):
-    return hdl.all(body)
+    return hdl.all(body, claims)
 
 
 @router.post(
@@ -27,7 +29,8 @@ def all(
     response_model_exclude_none=True,
 )
 def create(
-    request: PostEnvironmentRequest,
+    body: PostEnvironmentRequestBody,
+    claims: Claims = Depends(get_claims),
     hdl: EnvironmentHandler = Depends(get_environment_handler),
 ):
-    return hdl.create(request)
+    return hdl.create(body, claims)
