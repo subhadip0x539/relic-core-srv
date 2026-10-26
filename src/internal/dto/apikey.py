@@ -23,7 +23,7 @@ GetApiKeysResponseBody = list[GetApiKeysResponseBodyItem]
 GetApiKeysResponse = Response[GetApiKeysResponseBody]
 
 
-class PostApiKeyRequest(BaseModel):
+class PostApiKeyRequestBody(BaseModel):
     service_id: str
 
 

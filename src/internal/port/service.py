@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from internal.domain.service import Service
-from internal.dto.service import PostServiceRequest, GetServicesRequestBody
+from internal.dto.service import PostServiceRequestBody, GetServicesRequestBody
 from internal.lib.fc import FC
 
 
@@ -28,5 +28,5 @@ class ServiceService(ABC):
         pass
 
     @abstractmethod
-    def create(self, request: PostServiceRequest) -> Service:
+    def create(self, body: PostServiceRequestBody) -> Service:
         pass

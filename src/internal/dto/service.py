@@ -28,7 +28,7 @@ class GetServiceResponseBody(BaseModel):
 GetServiceResponse = Response[GetServiceResponseBody]
 
 
-class PostServiceRequest(BaseModel):
+class PostServiceRequestBody(BaseModel):
     name: str
     workspace_id: str
     environment_id: str

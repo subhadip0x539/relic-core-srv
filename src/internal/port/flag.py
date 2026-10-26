@@ -1,6 +1,10 @@
 from abc import ABC, abstractmethod
 from internal.domain.flag import Flag
-from internal.dto.flag import PostFlagRequest, GetFlagsRequestBody, PatchFlagRequest
+from internal.dto.flag import (
+    PostFlagRequestBody,
+    GetFlagsRequestBody,
+    PatchFlagRequestBody,
+)
 from internal.lib.fc import FC
 
 
@@ -14,7 +18,7 @@ class FlagRepository(ABC):
         pass
 
     @abstractmethod
-    async def update(self, flag_id: str, payload: PatchFlagRequest):
+    async def update(self, flag_id: str, payload: PatchFlagRequestBody):
         pass
 
 
@@ -24,9 +28,9 @@ class FlagService(ABC):
         pass
 
     @abstractmethod
-    def create(self, request: PostFlagRequest) -> Flag:
+    def create(self, body: PostFlagRequestBody) -> Flag:
         pass
 
     @abstractmethod
-    async def update(self, flag_id: str, request: PatchFlagRequest):
+    async def update(self, flag_id: str, request: PatchFlagRequestBody):
         pass

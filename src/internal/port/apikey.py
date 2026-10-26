@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 from internal.domain.apikey import ApiKey
 from internal.dto.apikey import (
     GetApiKeysRequestBody,
-    PostApiKeyRequest,
+    PostApiKeyRequestBody,
     GetApiKeysResponseBody,
 )
 from internal.lib.fc import FC
@@ -28,5 +28,5 @@ class ApiKeyService(ABC):
         pass
 
     @abstractmethod
-    def create(self, request: PostApiKeyRequest) -> ApiKey:
+    def create(self, body: PostApiKeyRequestBody) -> ApiKey:
         pass

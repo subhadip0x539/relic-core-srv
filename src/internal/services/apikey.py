@@ -3,7 +3,7 @@ from internal.port.service import ServiceRepository
 from internal.domain.apikey import ApiKey
 from internal.dto.apikey import (
     GetApiKeysRequestBody,
-    PostApiKeyRequest,
+    PostApiKeyRequestBody,
     GetApiKeysResponseBody,
     GetApiKeysResponseBodyItem,
     GetApiKeysResponseBodyItemService,
@@ -43,14 +43,14 @@ class ApiKeyServiceImpl(ApiKeyService):
 
         return result
 
-    def create(self, request: PostApiKeyRequest) -> ApiKey:
-        service = self.service_repo.get(request.service_id)
+    def create(self, body: PostApiKeyRequestBody) -> ApiKey:
+        service = self.service_repo.get(body.service_id)
 
         payload = ApiKey(
             id=str(uuid4()),
             workspace_id=service.workspace_id,
             environment_id=service.environment_id,
-            service_id=request.service_id,
+            service_id=service.id,
         )
 
         return self.api_key_repo.create(payload)

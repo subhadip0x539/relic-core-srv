@@ -1,6 +1,6 @@
 from internal.port.service import ServiceService, ServiceRepository
 from internal.domain.service import Service
-from internal.dto.service import PostServiceRequest, GetServicesRequestBody
+from internal.dto.service import PostServiceRequestBody, GetServicesRequestBody
 from uuid import uuid4
 from internal.domain.common import Filter, FilterOperator
 from internal.lib.fc import FC
@@ -21,12 +21,12 @@ class ServiceServiceImpl(ServiceService):
     def get(self, service_id: str) -> Service:
         return self.repo.get(service_id)
 
-    def create(self, request: PostServiceRequest) -> Service:
+    def create(self, body: PostServiceRequestBody) -> Service:
         payload = Service(
             id=str(uuid4()),
-            workspace_id=request.workspace_id,
-            environment_id=request.environment_id,
-            name=request.name,
+            workspace_id=body.workspace_id,
+            environment_id=body.environment_id,
+            name=body.name,
         )
 
         return self.repo.create(payload)

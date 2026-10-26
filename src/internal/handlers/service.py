@@ -2,12 +2,16 @@ from internal.port.service import ServiceService
 from internal.dto.service import (
     GetServicesResponse,
     GetServicesResponseResponseBodyItem,
-    PostServiceRequest,
+    PostServiceRequestBody,
     PostServiceResponse,
     GetServicesRequestBody,
     GetServiceResponse,
     GetServiceResponseBody,
 )
+from fastapi import HTTPException
+from internal.lib.claims import Claims
+from internal.domain.auth import Permission
+from internal.domain.error import ForbiddenError
 
 
 class ServiceHandler:
@@ -16,7 +20,12 @@ class ServiceHandler:
     def __init__(self, svc: ServiceService):
         self.svc = svc
 
-    def all(self, body: GetServicesRequestBody) -> GetServicesResponse:
+    def all(self, body: GetServicesRequestBody, claims: Claims) -> GetServicesResponse:
+        try:
+            claims.can(Permission.SERVICE_READ)
+        except ForbiddenError as exc:
+            raise HTTPException(exc.code, exc.message)
+
         result = self.svc.all(body)
 
         response = GetServicesResponse(
@@ -28,7 +37,12 @@ class ServiceHandler:
 
         return response
 
-    def get(self, service_id: str) -> GetServiceResponse:
+    def get(self, service_id: str, claims: Claims) -> GetServiceResponse:
+        try:
+            claims.can(Permission.SERVICE_READ)
+        except ForbiddenError as exc:
+            raise HTTPException(exc.code, exc.message)
+
         result = self.svc.get(service_id)
 
         response = GetServiceResponse(
@@ -42,8 +56,15 @@ class ServiceHandler:
 
         return response
 
-    def create(self, request: PostServiceRequest) -> PostServiceResponse:
-        result = self.svc.create(request)
+    def create(
+        self, body: PostServiceRequestBody, claims: Claims
+    ) -> PostServiceResponse:
+        try:
+            claims.can(Permission.SERVICE_CREATE)
+        except ForbiddenError as exc:
+            raise HTTPException(exc.code, exc.message)
+
+        result = self.svc.create(body)
 
         return PostServiceResponse(
             detail="Service created successfully",

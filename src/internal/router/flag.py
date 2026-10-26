@@ -1,20 +1,25 @@
 from fastapi import APIRouter, Depends, status
 from internal.dto.flag import (
     GetFlagsResponse,
-    PostFlagRequest,
+    PostFlagRequestBody,
     PostFlagResponse,
     GetFlagsRequestBody,
-    PatchFlagRequest,
+    PatchFlagRequestBody,
     PatchFlagResponse,
 )
 from internal.deps.flag import FlagHandler, get_flag_handler
+from internal.deps.common import Claims, get_claims
 
 router = APIRouter(prefix="/flags")
 
 
 @router.post("/all", response_model=GetFlagsResponse, response_model_exclude_none=True)
-def all(body: GetFlagsRequestBody, hdl: FlagHandler = Depends(get_flag_handler)):
-    return hdl.all(body)
+def all(
+    body: GetFlagsRequestBody,
+    claims: Claims = Depends(get_claims),
+    hdl: FlagHandler = Depends(get_flag_handler),
+):
+    return hdl.all(body, claims)
 
 
 @router.post(
@@ -23,8 +28,12 @@ def all(body: GetFlagsRequestBody, hdl: FlagHandler = Depends(get_flag_handler))
     status_code=status.HTTP_201_CREATED,
     response_model_exclude_none=True,
 )
-def create(request: PostFlagRequest, hdl: FlagHandler = Depends(get_flag_handler)):
-    return hdl.create(request)
+def create(
+    body: PostFlagRequestBody,
+    claims: Claims = Depends(get_claims),
+    hdl: FlagHandler = Depends(get_flag_handler),
+):
+    return hdl.create(body, claims)
 
 
 @router.patch(
@@ -34,7 +43,8 @@ def create(request: PostFlagRequest, hdl: FlagHandler = Depends(get_flag_handler
 )
 async def update(
     flag_id: str,
-    request: PatchFlagRequest,
+    body: PatchFlagRequestBody,
+    claims: Claims = Depends(get_claims),
     hdl: FlagHandler = Depends(get_flag_handler),
 ):
-    return await hdl.update(flag_id, request)
+    return await hdl.update(flag_id, body, claims)

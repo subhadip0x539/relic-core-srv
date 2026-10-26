@@ -23,7 +23,7 @@ GetFlagsResponseBody = list[GetFlagsResponseBodyItem]
 GetFlagsResponse = Response[GetFlagsResponseBody]
 
 
-class PostFlagRequest(BaseModel):
+class PostFlagRequestBody(BaseModel):
     name: str
     description: Optional[str] = None
     type: str
@@ -37,7 +37,7 @@ class PostFlagRequest(BaseModel):
 PostFlagResponse = Response[str]
 
 
-class PatchFlagRequest(BaseModel):
+class PatchFlagRequestBody(BaseModel):
     name: Optional[str] = None
     description: Optional[str] = None
     enabled: Optional[bool] = None

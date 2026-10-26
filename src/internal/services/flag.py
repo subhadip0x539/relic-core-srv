@@ -2,10 +2,10 @@ from internal.port.flag import (
     FlagService,
     FlagRepository,
     GetFlagsRequestBody,
-    PatchFlagRequest,
+    PatchFlagRequestBody,
 )
 from internal.domain.flag import Flag
-from internal.dto.flag import PostFlagRequest
+from internal.dto.flag import PostFlagRequestBody
 from uuid import uuid4
 from internal.domain.common import Filter, FilterOperator
 from internal.lib.fc import FC
@@ -28,22 +28,22 @@ class FlagServiceImpl(FlagService):
 
         return self.repo.all(fc)
 
-    def create(self, request: PostFlagRequest) -> Flag:
+    def create(self, body: PostFlagRequestBody) -> Flag:
         payload = Flag(
             id=str(uuid4()),
-            name=request.name,
-            description=request.description,
-            type=request.type,
-            enabled=request.enabled,
-            value=request.value,
-            service_id=request.service_id,
-            environment_id=request.environment_id,
-            workspace_id=request.workspace_id,
+            name=body.name,
+            description=body.description,
+            type=body.type,
+            enabled=body.enabled,
+            value=body.value,
+            service_id=body.service_id,
+            environment_id=body.environment_id,
+            workspace_id=body.workspace_id,
         )
 
         return self.repo.create(payload)
 
-    async def update(self, flag_id: str, request: PatchFlagRequest):
+    async def update(self, flag_id: str, request: PatchFlagRequestBody):
         result = await self.repo.update(flag_id, request)
 
         return result

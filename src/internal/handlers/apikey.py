@@ -3,8 +3,12 @@ from internal.dto.apikey import (
     GetApiKeysRequestBody,
     GetApiKeysResponse,
     PostApiKeyResponse,
-    PostApiKeyRequest,
+    PostApiKeyRequestBody,
 )
+from fastapi import HTTPException
+from internal.lib.claims import Claims
+from internal.domain.auth import Permission
+from internal.domain.error import ForbiddenError
 
 
 class ApiKeyHandler:
@@ -13,15 +17,25 @@ class ApiKeyHandler:
     def __init__(self, svc: ApiKeyService):
         self.svc = svc
 
-    def all(self, body: GetApiKeysRequestBody) -> GetApiKeysResponse:
+    def all(self, body: GetApiKeysRequestBody, claims: Claims) -> GetApiKeysResponse:
+        try:
+            claims.can(Permission.API_KEY_READ)
+        except ForbiddenError as exc:
+            raise HTTPException(exc.code, exc.message)
+
         result = self.svc.all(body)
 
         response = GetApiKeysResponse(body=result)
 
         return response
 
-    def create(self, request: PostApiKeyRequest) -> PostApiKeyResponse:
-        result = self.svc.create(request)
+    def create(self, body: PostApiKeyRequestBody, claims: Claims) -> PostApiKeyResponse:
+        try:
+            claims.can(Permission.API_KEY_CREATE)
+        except ForbiddenError as exc:
+            raise HTTPException(exc.code, exc.message)
+
+        result = self.svc.create(body)
 
         return PostApiKeyResponse(
             detail="API Key created successfully",

@@ -3,11 +3,15 @@ from internal.dto.flag import (
     GetFlagsResponse,
     GetFlagsResponseBodyItem,
     PostFlagResponse,
-    PostFlagRequest,
+    PostFlagRequestBody,
     GetFlagsRequestBody,
-    PatchFlagRequest,
+    PatchFlagRequestBody,
     PatchFlagResponse,
 )
+from fastapi import HTTPException
+from internal.lib.claims import Claims
+from internal.domain.auth import Permission
+from internal.domain.error import ForbiddenError
 
 
 class FlagHandler:
@@ -16,7 +20,11 @@ class FlagHandler:
     def __init__(self, svc: FlagService):
         self.svc = svc
 
-    def all(self, body: GetFlagsRequestBody) -> GetFlagsResponse:
+    def all(self, body: GetFlagsRequestBody, claims: Claims) -> GetFlagsResponse:
+        try:
+            claims.can(Permission.FLAG_READ)
+        except ForbiddenError as exc:
+            raise HTTPException(exc.code, exc.message)
         result = self.svc.all(body)
 
         response = GetFlagsResponse(
@@ -35,8 +43,13 @@ class FlagHandler:
 
         return response
 
-    def create(self, request: PostFlagRequest) -> PostFlagResponse:
-        result = self.svc.create(request)
+    def create(self, body: PostFlagRequestBody, claims: Claims) -> PostFlagResponse:
+        try:
+            claims.can(Permission.FLAG_CREATE)
+        except ForbiddenError as exc:
+            raise HTTPException(exc.code, exc.message)
+
+        result = self.svc.create(body)
 
         return PostFlagResponse(
             detail="Flag created successfully",
@@ -44,8 +57,12 @@ class FlagHandler:
         )
 
     async def update(
-        self, flag_id: str, request: PatchFlagRequest
+        self, flag_id: str, body: PatchFlagRequestBody, claims: Claims
     ) -> PatchFlagResponse:
-        await self.svc.update(flag_id, request)
+        try:
+            claims.can(Permission.FLAG_CREATE)
+        except ForbiddenError as exc:
+            raise HTTPException(exc.code, exc.message)
+        await self.svc.update(flag_id, body)
 
         return PatchFlagResponse(detail="Flag updated successfully", body=None)
